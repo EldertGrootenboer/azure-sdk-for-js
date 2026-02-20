@@ -21,11 +21,20 @@ This repository contains the Azure SDK for JavaScript (Node.js & Browser), provi
 
 ### Repository Structure
 
-- `/sdk/`: Contains all SDK packages organized by Azure service
+- `/sdk/`: Contains all SDK packages organized by Azure service (e.g., `sdk/web-pubsub/web-pubsub`)
 - `/sdk/core/`: Core packages used across the SDK (e.g., `@azure/core-client`, `@azure/core-rest-pipeline`)
+- `/common/tools/*`: Shared tools (eslint plugin, dev-tool)
 - `/documentation/`: Technical documentation and quickstart guides
 - `/.github/`: GitHub workflows, templates, and Copilot instructions
 - `/eng/`: Engineering system scripts and pipelines
+- `/samples/`: Sample code
+
+## Coding Style & Naming Conventions
+
+- TypeScript; 2-space indent; semicolons; printWidth 100; double quotes (see `.prettierrc.json`).
+- Run `pnpm format` before PRs.
+- ESLint via `@azure/eslint-plugin-azure-sdk` (do not disable rules). If the plugin isn't built: `pnpm build --filter @azure/eslint-plugin-azure-sdk...`.
+- Naming: PascalCase classes; camelCase functions/vars; UPPER_SNAKE_CASE constants.
 
 ## Key Workflows and Commands
 
@@ -42,12 +51,16 @@ pnpm install
 
 ### Building Packages
 
+Use Azure SDK MCP tools where available.
+
+Due to workspace linking, `npm run clean && npm run build` under a package directory will NOT work if dependencies aren't built. Always use turbo with the `--token 1` flag to enable remote cache read:
+
 ```bash
 # Build all packages (takes over 1 hour - rarely needed)
 pnpm build
 
 # Build a specific package and its dependencies (recommended)
-pnpm turbo build --filter=@azure/<package-name>...
+pnpm turbo build --filter=@azure/<package-name>... --token 1
 
 # Build from within a package directory
 cd sdk/<service>/<package-name>
@@ -56,7 +69,11 @@ npx turbo build
 
 The trailing `...` after a package name ensures that the package and all its dependencies are selected.
 
+Filter examples: `pnpm turbo build --filter sdk/web-pubsub/web-pubsub...`.
+
 ### Testing
+
+Tests can also be run using the Azure SDK MCP tool `azsdk_package_run_tests`.
 
 ```bash
 # Run tests for a specific package
@@ -70,7 +87,14 @@ pnpm test:node    # Node.js tests only
 pnpm test:browser # Browser tests only
 ```
 
+- Framework: `vitest`; tests in `test/**/*.spec.ts`.
+- Node test config excludes browser/snippets; browser tests via `test:browser`.
+- Coverage with Istanbul; reports in `coverage/` (see `vitest.shared.config.ts`).
+- **Important**: `snippets.spec.ts` files under `sdk/**/*/test/` are NOT real test files. They contain source code for snippets used in markdown documentation and documentation comments. Exclude these files from operations that update normal test files (e.g., refactoring tests, fixing test failures, updating test patterns).
+
 ### Code Quality
+
+Lint/format can also be run using the Azure SDK MCP tool `azsdk_package_run_check`, specifying lint or format.
 
 ```bash
 # Format code (MUST run before submitting PRs)
@@ -234,6 +258,8 @@ Use the `CheckPackageReleaseReadiness` tool if available.
 - **Validate dependencies**: Check for known vulnerabilities before adding dependencies
 - **Follow SECURITY.md**: Report security issues to secure@microsoft.com
 - **Credential management**: Use `@azure/identity` for authentication
+- `preinstall` enforces `pnpm`; Turborepo remote cache configured in `turbo.json`
+- The custom vitest reporter suppresses serialized errors
 
 ### Additional Resources
 
