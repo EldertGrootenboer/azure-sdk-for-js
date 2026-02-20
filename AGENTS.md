@@ -210,8 +210,8 @@ Key documentation resources for agents:
 - TypeScript Design Guidelines: https://azure.github.io/azure-sdk/typescript_design.html
 - Implementation Guidelines: https://azure.github.io/azure-sdk/typescript_implementation.html
 - Repository Structure: https://github.com/Azure/azure-sdk/blob/main/docs/policies/repostructure.md
-- Testing Guide: `/documentation/Quickstart-on-how-to-write-tests.md`
-- Linting Guide: `/documentation/linting.md`
+- Testing Guide: [Quickstart-on-how-to-write-tests.md](https://github.com/Azure/azure-sdk-for-js/blob/main/documentation/Quickstart-on-how-to-write-tests.md)
+- Linting Guide: [linting.md](https://github.com/Azure/azure-sdk-for-js/blob/main/documentation/linting.md)
 
 ### Contribution Workflow
 
@@ -233,13 +233,13 @@ The repository includes auto-generated code from swagger and TypeSpec:
 
 - **Swagger-based**: Management libraries (`@azure/arm-*`)
 - **TypeSpec-based**: Data plane libraries
-- See `/documentation/Generate-code-from-TypeSpec.md` for details
+- See [Generate-code-from-TypeSpec.md](https://github.com/Azure/azure-sdk-for-js/blob/main/documentation/Generate-code-from-TypeSpec.md) for details
 
 When modifying auto-generated code, agents should:
 
 - Prefer changes to generation templates over hand-editing generated files
 - Document any manual customizations
-- Follow guidance in `/documentation/RLC-customization.md`
+- Follow guidance in [RLC-customization.md](https://github.com/Azure/azure-sdk-for-js/blob/main/documentation/RLC-customization.md)
 
 #### Package Release Readiness
 
