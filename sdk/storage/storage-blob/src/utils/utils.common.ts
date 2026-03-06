@@ -1019,6 +1019,14 @@ export function assertResponse<T extends object, Headers = undefined, Body = und
   response: T,
 ): WithResponse<T, Headers, Body> {
   if (`_response` in response) {
+    if (!("parsedHeaders" in (response as any)._response)) {
+      throw new Error("Response is expected to have parsedHeaders in _response, but it doesn't.");
+    }
+    if (!(response as any)._response.parsedBody) {
+      console.log(
+        "#################### Response is expected to have parsedBody in _response, but it doesn't.",
+      );
+    }
     return response as WithResponse<T, Headers, Body>;
   }
 
